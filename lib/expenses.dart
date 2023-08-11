@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expenses_app/models/expense_model.dart';
+import 'package:personal_expenses_app/widgets/expenses_list_widget.dart';
+import 'package:intl/intl.dart';
 
 class Expenses extends StatefulWidget {
   const Expenses({super.key});
@@ -8,6 +11,18 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
+  final List<ExpenseModel> _registeredExpenses = [
+    ExpenseModel(
+        title: 'Curso de Flutter',
+        amount: 36.99,
+        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
+        category: Category.contas),
+    ExpenseModel(
+        title: 'Cerveja do jogo',
+        amount: 40.00,
+        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
+        category: Category.lazer),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,10 +30,14 @@ class _ExpensesState extends State<Expenses> {
         title: const Text('Despesas Pessoais'),
         actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
       ),
-      body: const Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [Text('Gráfico de gastos'), Text('Listagem de gastos')]),
+      body: Center(
+        child:
+            Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          const Text('Gráfico de gastos'),
+          SizedBox(
+              height: 400,
+              child: ExpensesListWidget(expenses: _registeredExpenses))
+        ]),
       ),
     );
   }
