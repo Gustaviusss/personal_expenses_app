@@ -22,6 +22,36 @@ class _ExpensesState extends State<Expenses> {
         amount: 40.00,
         date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
         category: Category.lazer),
+    ExpenseModel(
+        title: 'Curso de Flutter',
+        amount: 36.99,
+        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
+        category: Category.viagem),
+    ExpenseModel(
+        title: 'Cerveja do jogo',
+        amount: 40.00,
+        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
+        category: Category.alimentacao),
+    ExpenseModel(
+        title: 'Curso de Flutter',
+        amount: 36.99,
+        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
+        category: Category.contas),
+    ExpenseModel(
+        title: 'Cerveja do jogo',
+        amount: 40.00,
+        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
+        category: Category.lazer),
+    ExpenseModel(
+        title: 'Curso de Flutter',
+        amount: 36.99,
+        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
+        category: Category.viagem),
+    ExpenseModel(
+        title: 'Cerveja do jogo',
+        amount: 40.00,
+        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
+        category: Category.alimentacao),
   ];
   @override
   Widget build(BuildContext context) {
@@ -32,7 +62,7 @@ class _ExpensesState extends State<Expenses> {
       ),
       body: Center(
         child:
-            Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
           const Text('Gráfico de gastos'),
           SizedBox(
               height: 400,
