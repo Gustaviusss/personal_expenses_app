@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:personal_expenses_app/models/expense_model.dart';
 import 'package:personal_expenses_app/widgets/expenses_list_widget.dart';
-import 'package:intl/intl.dart';
 
 class Expenses extends StatefulWidget {
   const Expenses({super.key});
@@ -15,50 +14,26 @@ class _ExpensesState extends State<Expenses> {
     ExpenseModel(
         title: 'Curso de Flutter',
         amount: 36.99,
-        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
+        date: DateTime.now(),
         category: Category.contas),
     ExpenseModel(
         title: 'Cerveja do jogo',
         amount: 40.00,
-        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
+        date: DateTime.now(),
         category: Category.lazer),
-    ExpenseModel(
-        title: 'Curso de Flutter',
-        amount: 36.99,
-        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
-        category: Category.viagem),
-    ExpenseModel(
-        title: 'Cerveja do jogo',
-        amount: 40.00,
-        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
-        category: Category.alimentacao),
-    ExpenseModel(
-        title: 'Curso de Flutter',
-        amount: 36.99,
-        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
-        category: Category.contas),
-    ExpenseModel(
-        title: 'Cerveja do jogo',
-        amount: 40.00,
-        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
-        category: Category.lazer),
-    ExpenseModel(
-        title: 'Curso de Flutter',
-        amount: 36.99,
-        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
-        category: Category.viagem),
-    ExpenseModel(
-        title: 'Cerveja do jogo',
-        amount: 40.00,
-        date: DateFormat('EEEE, dd/MM/yyyy').format(DateTime.now()),
-        category: Category.alimentacao),
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Despesas Pessoais'),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.add),
+            iconSize: 32,
+          )
+        ],
       ),
       body: Center(
         child:
@@ -66,7 +41,28 @@ class _ExpensesState extends State<Expenses> {
           const Text('Gráfico de gastos'),
           SizedBox(
               height: 400,
-              child: ExpensesListWidget(expenses: _registeredExpenses))
+              child: _registeredExpenses.isNotEmpty
+                  ? ExpensesListWidget(expenses: _registeredExpenses)
+                  : Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.attach_money,
+                            size: 80,
+                            color: Colors.grey[600],
+                          ),
+                          Text(
+                            'Não há transações no momento',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 24,
+                                fontStyle: FontStyle.italic,
+                                color: Colors.grey[700]),
+                          )
+                        ],
+                      ),
+                    ))
         ]),
       ),
     );
