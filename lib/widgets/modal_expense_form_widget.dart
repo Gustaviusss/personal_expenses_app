@@ -9,12 +9,31 @@ class ModalExpenseForm extends StatefulWidget {
 }
 
 class _ModalExpenseFormState extends State<ModalExpenseForm> {
-  var _expenseTitleController = TextEditingController();
+  final _expenseTitleController = TextEditingController();
+  final _expenseValueController = TextEditingController();
+  DateTime? selectedDate;
 
   @override
   void dispose() {
     _expenseTitleController.dispose();
+    _expenseValueController.dispose();
     super.dispose();
+  }
+
+  void _presentDatePicker() {
+    final today = DateTime.now();
+    final firstDay = DateTime(today.year, today.month - 1, today.day);
+    showDatePicker(
+            locale: const Locale('pt', 'BR'),
+            context: context,
+            initialDate: today,
+            firstDate: firstDay,
+            lastDate: today)
+        .then((value) {
+      setState(() {
+        selectedDate = value;
+      });
+    });
   }
 
   @override
@@ -41,9 +60,12 @@ class _ModalExpenseFormState extends State<ModalExpenseForm> {
                   SizedBox(
                     height: 60,
                     width: MediaQuery.of(context).size.width / 2.5,
-                    child: const TextField(
-                      decoration: InputDecoration(
-                          label: Text('Valor'), border: OutlineInputBorder()),
+                    child: TextField(
+                      controller: _expenseValueController,
+                      decoration: const InputDecoration(
+                          prefixText: 'R\$ ',
+                          label: Text('Valor'),
+                          border: OutlineInputBorder()),
                       keyboardType: TextInputType.number,
                     ),
                   ),
@@ -70,10 +92,57 @@ class _ModalExpenseFormState extends State<ModalExpenseForm> {
                 ],
               ),
             ),
-            OutlinedButton(
-              onPressed: () {},
-              child: Text('Salvar Gasto'),
-            )
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: OutlinedButton(
+                      onPressed: _presentDatePicker,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(selectedDate == null
+                                ? "Data"
+                                : '${selectedDate?.day}/${selectedDate?.month}/${selectedDate?.year}'),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(Icons.calendar_month)
+                          ]),
+                    )),
+                const SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  flex: 2,
+                  child: OutlinedButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'Salvar Gasto',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Cancelar',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.deepPurple,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ]),
         )
       ]),

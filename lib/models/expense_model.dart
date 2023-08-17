@@ -28,6 +28,6 @@ class ExpenseModel {
   final Category category;
 
   String get formattedDate {
-    return DateFormat('EEEE, dd/MM/yyyy', 'pt_BR').format(date).toUpperCase();
+    return DateFormat('EEEE, dd/MM/yyyy', 'pt_BR').format(date);
   }
 }

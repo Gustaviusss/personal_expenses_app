@@ -3,6 +3,8 @@ import 'package:personal_expenses_app/models/expense_model.dart';
 import 'package:personal_expenses_app/widgets/expenses_list_widget.dart';
 import 'package:personal_expenses_app/widgets/modal_expense_form_widget.dart';
 
+import 'swipeControllers/swipe_detector.dart';
+
 class Expenses extends StatefulWidget {
   const Expenses({super.key});
 
@@ -42,35 +44,39 @@ class _ExpensesState extends State<Expenses> {
           )
         ],
       ),
-      body: Center(
-        child:
-            Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          const Text('Gráfico de gastos'),
-          SizedBox(
-              height: 400,
-              child: _registeredExpenses.isNotEmpty
-                  ? ExpensesListWidget(expenses: _registeredExpenses)
-                  : Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.attach_money,
-                            size: 80,
-                            color: Colors.grey[600],
-                          ),
-                          Text(
-                            'Não há transações no momento',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 24,
-                                fontStyle: FontStyle.italic,
-                                color: Colors.grey[700]),
-                          )
-                        ],
-                      ),
-                    ))
-        ]),
+      body: SwipeDetector(
+        onSwipeUp: _addExpenseModal,
+        child: Center(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text('Gráfico de gastos'),
+                SizedBox(
+                    height: 400,
+                    child: _registeredExpenses.isNotEmpty
+                        ? ExpensesListWidget(expenses: _registeredExpenses)
+                        : Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.attach_money,
+                                  size: 80,
+                                  color: Colors.grey[600],
+                                ),
+                                Text(
+                                  'Não há transações no momento',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.grey[700]),
+                                )
+                              ],
+                            ),
+                          ))
+              ]),
+        ),
       ),
     );
   }
