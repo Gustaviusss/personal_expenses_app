@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:personal_expenses_app/models/expense_model.dart';
 
 class ExpenseCard extends StatelessWidget {
-  const ExpenseCard(
-      {super.key, required this.expense, required this.removeExpense});
+  const ExpenseCard({super.key, required this.expense});
 
   final ExpenseModel expense;
-  final void Function() removeExpense;
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +13,6 @@ class ExpenseCard extends StatelessWidget {
       color: const Color.fromARGB(255, 247, 205, 241),
       elevation: 10,
       child: ListTile(
-        trailing: IconButton(
-            iconSize: 28,
-            onPressed: removeExpense,
-            icon: const Icon(
-              Icons.delete,
-            )),
         iconColor: Colors.deepPurple,
         leading: Icon(
           categoryIcons[expense.category],

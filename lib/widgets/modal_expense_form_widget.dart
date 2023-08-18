@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expenses_app/widgets/error_dialog_widget.dart';
 import '../models/expense_model.dart';
 
 class ModalExpenseForm extends StatefulWidget {
-  const ModalExpenseForm({super.key});
+  const ModalExpenseForm({super.key, required this.addExpense});
 
+  final void Function(ExpenseModel) addExpense;
   @override
   State<ModalExpenseForm> createState() => _ModalExpenseFormState();
 }
@@ -11,6 +13,7 @@ class ModalExpenseForm extends StatefulWidget {
 class _ModalExpenseFormState extends State<ModalExpenseForm> {
   final _expenseTitleController = TextEditingController();
   final _expenseValueController = TextEditingController();
+  Category _categoryController = Category.contas;
   DateTime? selectedDate;
 
   @override
@@ -36,13 +39,36 @@ class _ModalExpenseFormState extends State<ModalExpenseForm> {
     });
   }
 
+  void _submitData() {
+    final enteredAmount = double.tryParse(_expenseValueController.text);
+    final isAmountInvalid = enteredAmount == null || enteredAmount <= 0;
+    if (_expenseTitleController.text.trim().isEmpty ||
+        isAmountInvalid ||
+        selectedDate == null) {
+      showDialog(context: context, builder: (_) => const ErrorDialogWidget());
+    } else {
+      widget.addExpense(ExpenseModel(
+          title: _expenseTitleController.text,
+          amount: enteredAmount,
+          date: selectedDate!,
+          category: _categoryController));
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(24),
-      child:
-          Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-        const Center(child: Text("Novo Gasto")),
+      padding: const EdgeInsets.fromLTRB(24, 72, 24, 24),
+      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        const Padding(
+          padding: EdgeInsets.all(20),
+          child: Center(
+              child: Text(
+            "Novo Gasto",
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          )),
+        ),
         SizedBox(
           height: 400,
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -69,26 +95,24 @@ class _ModalExpenseFormState extends State<ModalExpenseForm> {
                       keyboardType: TextInputType.number,
                     ),
                   ),
-                  const DropdownMenu(
-                      label: Text('Categoria'),
-                      dropdownMenuEntries: [
-                        DropdownMenuEntry(
-                          value: Category.alimentacao,
-                          label: 'Alimentação',
-                        ),
-                        DropdownMenuEntry(
-                          value: Category.contas,
-                          label: 'Contas',
-                        ),
-                        DropdownMenuEntry(
-                          value: Category.lazer,
-                          label: 'Lazer',
-                        ),
-                        DropdownMenuEntry(
-                          value: Category.viagem,
-                          label: 'Viagem',
-                        ),
-                      ]),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: DropdownButton(
+                        hint: Text(_categoryController.name.toUpperCase()),
+                        items: Category.values
+                            .map((category) => DropdownMenuItem(
+                                value: category,
+                                child: Text(category.name.toUpperCase())))
+                            .toList(),
+                        onChanged: (value) {
+                          if (value == null) {
+                            return;
+                          }
+                          setState(() {
+                            _categoryController = value;
+                          });
+                        }),
+                  )
                 ],
               ),
             ),
@@ -105,10 +129,10 @@ class _ModalExpenseFormState extends State<ModalExpenseForm> {
                             Text(selectedDate == null
                                 ? "Data"
                                 : '${selectedDate?.day}/${selectedDate?.month}/${selectedDate?.year}'),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
-                            Icon(Icons.calendar_month)
+                            const Icon(Icons.calendar_month)
                           ]),
                     )),
                 const SizedBox(
@@ -117,7 +141,7 @@ class _ModalExpenseFormState extends State<ModalExpenseForm> {
                 Expanded(
                   flex: 2,
                   child: OutlinedButton(
-                    onPressed: () {},
+                    onPressed: _submitData,
                     child: const Text(
                       'Salvar Gasto',
                       style: TextStyle(fontSize: 16),

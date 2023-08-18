@@ -28,7 +28,35 @@ class _ExpensesState extends State<Expenses> {
 
   void _addExpenseModal() {
     showModalBottomSheet(
-        context: context, builder: (_) => const ModalExpenseForm());
+        isScrollControlled: true,
+        context: context,
+        builder: (_) => ModalExpenseForm(
+              addExpense: registerExpense,
+            ));
+  }
+
+  void registerExpense(ExpenseModel expense) {
+    setState(() {
+      _registeredExpenses.add(expense);
+    });
+  }
+
+  void deleteExpense(ExpenseModel expense) {
+    final expenseIndex = _registeredExpenses.indexOf(expense);
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: const Duration(seconds: 3),
+      content: const Text('Gasto Removido'),
+      action: SnackBarAction(
+          label: 'Desfazer',
+          onPressed: () {
+            setState(() {
+              _registeredExpenses.insert(expenseIndex, expense);
+            });
+          }),
+    ));
   }
 
   @override
@@ -54,7 +82,9 @@ class _ExpensesState extends State<Expenses> {
                 SizedBox(
                     height: 400,
                     child: _registeredExpenses.isNotEmpty
-                        ? ExpensesListWidget(expenses: _registeredExpenses)
+                        ? ExpensesListWidget(
+                            removeExpense: deleteExpense,
+                            expenses: _registeredExpenses)
                         : Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
